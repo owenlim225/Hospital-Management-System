@@ -29,9 +29,8 @@ class HospitalManagement:
         # Prescription RIGHT
         data_frame_right = tk.LabelFrame(data_frame, bd=10, relief=tk.RIDGE, padx=10, font=("times new roman", 11, "bold"), text="Prescription")
         data_frame_right.place(x=980, y=1, width=345, height=280)
-
-
-        #===============Left Info===============
+        
+        #===============Patient Info (Left)===============
 
         #Name of Tablet
         lbl_name_tablet = tk.Label(data_frame_left, text="Names of Tablet:", font=("times new roman", 11, "bold"), padx=2, pady=5)
@@ -88,7 +87,7 @@ class HospitalManagement:
         txt_side_effect=tk.Entry(data_frame_left, font=("times new roman", 11, "bold"), width=35)
         txt_side_effect.grid(row=8, column=1)
 
-        #===============Right Info===============
+        #===============Patient Info (Right)===============
 
         #Further info
         lbl_further_info=tk.Label(data_frame_left, font=("times new roman", 11, "bold"), text="Further Information:", padx=45)
@@ -121,10 +120,10 @@ class HospitalManagement:
         txt_patient_ID.grid(row=4, column=3)
 
         #Nhs Number
-        lbl_nhs_num=tk.Label(data_frame_left, font=("times new roman", 11, "bold"), text="Nhs Number:", padx=45)
-        lbl_nhs_num.grid(row=5, column=2, sticky=tk.W)
-        txt_nhs_num=tk.Entry(data_frame_left, font=("times new roman", 11, "bold"), width=35)
-        txt_nhs_num.grid(row=5, column=3)
+        lbl_Nhs_num=tk.Label(data_frame_left, font=("times new roman", 11, "bold"), text="Nhs Number:", padx=45)
+        lbl_Nhs_num.grid(row=5, column=2, sticky=tk.W)
+        txt_Nhs_num=tk.Entry(data_frame_left, font=("times new roman", 11, "bold"), width=35)
+        txt_Nhs_num.grid(row=5, column=3)
         
         #Patient name
         lbl_patient_name=tk.Label(data_frame_left, font=("times new roman", 11, "bold"), text="Patient name:", padx=45)
@@ -143,6 +142,10 @@ class HospitalManagement:
         lbl_patient_address.grid(row=8, column=2, sticky=tk.W)
         txt_patient_address=tk.Entry(data_frame_left, font=("times new roman", 11, "bold"), width=35)
         txt_patient_address.grid(row=8, column=3)
+
+        #===============Prescription Info (Right)===============
+        self.txt_prescription=tk.Text(data_frame_right, font=("times new roman", 11, "bold"), width=38, height=13, padx=2, pady=6)
+        self.txt_prescription.grid(row=0, column=0)
 
 
 
@@ -177,32 +180,49 @@ class HospitalManagement:
         #Exit
         btn_prescription = tk.Button(button_frame, text="Exit", bg="green", fg="white", font=("times new roman", 11, "bold"), width=23, height=1, padx=4, pady=6)
         btn_prescription.grid(row=0, column=5)
-
-
-
-
-        #===================================Details frame===================================
-
-        details_frame = tk.Frame(self.root, bd=20, relief=tk.RIDGE, bg="linen")  # Set background color
-        details_frame.place(x=0, y=500, width=1366, height=205)
-
-
-
-
-        #===================================Data Right frame===================================
-        self.txt_prescription=tk.Text(data_frame_right, font=("times new roman", 11, "bold"), width=38, height=13, padx=2, pady=6)
-        self.txt_prescription.grid(row=0, column=0)
-
         
 
 
 
+        #===================================Details frame (bottom)===================================
+        #Main frame
+        details_frame = tk.Frame(self.root, bd=20, relief=tk.RIDGE, bg="linen")  # Set background color
+        details_frame.place(x=0, y=500, width=1366, height=205)
+
+        scroll_x = ttk.Scrollbar(details_frame, orient=tk.HORIZONTAL)
+        scroll_y = ttk.Scrollbar(details_frame, orient=tk.VERTICAL)
+
+        self.hospital_table = ttk.Treeview(details_frame, column=("nameoftable", "ref", "dose", "nooftablets", "lot", 
+                                                                "issuedate","expdate", "dailydose", "sideeffect", "furtherinfo",
+                                                                "bloodpressure", "storage", "medicine", "patientid", "Nhsnumber",
+                                                                "patientname", "birthdate", "patientaddress"), 
+                                        xscrollcommand=scroll_x.set, yscrollcommand=scroll_y.set)
+
+        scroll_x.config(command=self.hospital_table.xview)
+        scroll_y.config(command=self.hospital_table.yview)
+
+        scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
+        scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
 
 
 
+        self.hospital_table.heading("nameoftable", text="Name of Tablet")
+        self.hospital_table.heading("ref", text="Reference No:")
+        self.hospital_table.heading("dose", text="Dose:")
+        self.hospital_table.heading("nooftablets", text="No. of Tablets:")
+        self.hospital_table.heading("lot", text="Lot:")
+        self.hospital_table.heading("issuedate", text="Issue date:")
+        self.hospital_table.heading("expdate", text="Expiration Date:")
+        self.hospital_table.heading("dailydose", text="Daily Dose:")
+        self.hospital_table.heading("storage", text="Storage:")
+        self.hospital_table.heading("Nhsnumber", text="Nhs Number:")
+        self.hospital_table.heading("patientname", text="Patient name:")
+        self.hospital_table.heading("birthdate", text="Birth date:")
+        self.hospital_table.heading("patientaddress", text="Address:")
 
-
-
+        self.hospital_table["show"]="headings"
+        self.hospital_table.pack(fill=tk.BOTH, expand=1)
+        
 
 root = tk.Tk()
 obj = HospitalManagement(root)
