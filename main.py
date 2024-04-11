@@ -186,17 +186,19 @@ class HospitalManagement:
 
         #===================================Details frame (bottom)===================================
         #Main frame
-        details_frame = tk.Frame(self.root, bd=20, relief=tk.RIDGE, bg="linen")  # Set background color
+        details_frame = tk.Frame(self.root, bd=20, relief=tk.RIDGE, bg="linen")
         details_frame.place(x=0, y=500, width=1366, height=205)
 
+        # Scrollbars
         scroll_x = ttk.Scrollbar(details_frame, orient=tk.HORIZONTAL)
         scroll_y = ttk.Scrollbar(details_frame, orient=tk.VERTICAL)
 
-        self.hospital_table = ttk.Treeview(details_frame, column=("nameoftable", "ref", "dose", "nooftablets", "lot", 
-                                                                "issuedate","expdate", "dailydose", "sideeffect", "furtherinfo",
-                                                                "bloodpressure", "storage", "medicine", "patientid", "Nhsnumber",
-                                                                "patientname", "birthdate", "patientaddress"), 
-                                        xscrollcommand=scroll_x.set, yscrollcommand=scroll_y.set)
+        # Hospital Table
+        self.hospital_table = ttk.Treeview(details_frame, columns=("nameoftable", "ref", "dose", "nooftablets", "lot",
+                                                                    "issuedate", "expdate", "dailydose", "storage",
+                                                                    "Nhsnumber", "patientname", "birthdate",
+                                                                    "patientaddress"),
+                                            xscrollcommand=scroll_x.set, yscrollcommand=scroll_y.set)
 
         scroll_x.config(command=self.hospital_table.xview)
         scroll_y.config(command=self.hospital_table.yview)
@@ -204,24 +206,30 @@ class HospitalManagement:
         scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
         scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
 
+        # Headings
+        headings = ["Name of Tablet", "Reference No:", "Dose:", "No. of Tablets:", "Lot:", "Issue date:",
+                    "Expiration Date:", "Daily Dose:", "Storage:", "Nhs Number:", "Patient name:", "Birth date:",
+                    "Address:"]
+        columns = ["nameoftable", "ref", "dose", "nooftablets", "lot", "issuedate", "expdate", "dailydose",
+                   "storage", "Nhsnumber", "patientname", "birthdate", "patientaddress"]
 
+        for heading, col in zip(headings, columns):
+            self.hospital_table.heading(col, text=heading, anchor=tk.CENTER)
+            self.hospital_table.column(col, width=100, anchor=tk.CENTER)
 
-        self.hospital_table.heading("nameoftable", text="Name of Tablet")
-        self.hospital_table.heading("ref", text="Reference No:")
-        self.hospital_table.heading("dose", text="Dose:")
-        self.hospital_table.heading("nooftablets", text="No. of Tablets:")
-        self.hospital_table.heading("lot", text="Lot:")
-        self.hospital_table.heading("issuedate", text="Issue date:")
-        self.hospital_table.heading("expdate", text="Expiration Date:")
-        self.hospital_table.heading("dailydose", text="Daily Dose:")
-        self.hospital_table.heading("storage", text="Storage:")
-        self.hospital_table.heading("Nhsnumber", text="Nhs Number:")
-        self.hospital_table.heading("patientname", text="Patient name:")
-        self.hospital_table.heading("birthdate", text="Birth date:")
-        self.hospital_table.heading("patientaddress", text="Address:")
-
-        self.hospital_table["show"]="headings"
+        self.hospital_table["show"] = "headings"
         self.hospital_table.pack(fill=tk.BOTH, expand=1)
+        
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
         
 
 root = tk.Tk()
