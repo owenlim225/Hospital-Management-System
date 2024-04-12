@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
-from tkcalendar import DateEntry
 import random
 import time
 import datetime
@@ -16,7 +15,7 @@ class HospitalManagement(tk.Tk):
 
         self.strvars = {}  # Make it an instance variable
 
-        #Int Var of each datangina
+        # Int Var of each datangina
         variables = [
             "name_tablet", "ref", "dose", "no_of_tablet", "lot", "issue_date", "exp_date",
             "daily_dose", "side_effect", "further_info", "blood_pressure", "storage",
@@ -178,10 +177,11 @@ class HospitalManagement(tk.Tk):
         lbl_birth_date = tk.Label(data_frame_left, font=("times new roman", 11, "bold"), text="Birth date:",
                                      padx=45)
         lbl_birth_date.grid(row=7, column=2, sticky=tk.W)
-        txt_birth_date = DateEntry(data_frame_left, textvariable=self.strvars['birth_date'],
-                                     font=("times new roman", 12, "bold"), width=33, background='darkblue',
-                                     foreground='white', borderwidth=2)
+        txt_birth_date = tk.Entry(data_frame_left, textvariable=self.strvars['birth_date'],
+                                       font=("times new roman", 11, "bold"), width=35)
         txt_birth_date.grid(row=7, column=3)
+
+
 
         # Patient Address
         lbl_patient_address = tk.Label(data_frame_left, font=("times new roman", 11, "bold"),
@@ -197,25 +197,16 @@ class HospitalManagement(tk.Tk):
 
 
 
-        #===================================Button frame===================================
+    #===================================Button frame===================================
     def mainButton(self):
         button_frame = tk.Frame(self, bd=15, relief=tk.RIDGE, bg="linen")  # Set background color
         button_frame.place(x=0, y=430, width=1366, height=70)
-
 
         #===============Buttons===============        
         # Buttons
         button_texts = ["Prescription", "Prescription Data", "Update", "Delete", "Reset", "Exit"]
         button_colours = ["green", "green", "green", "green", "green", "green"]
-        button_commands = [None, None, None, None, None, None]  # Fill this list with the respective command functions if needed
-
-
-
-
-        
-
-
-
+        button_commands = [None, self.iPrescriptionData, None, None, None, None]  # Assign the respective command functions
 
         for i, (text, color, command) in enumerate(zip(button_texts, button_colours, button_commands)):
             btn_prescription = tk.Button(
@@ -231,10 +222,9 @@ class HospitalManagement(tk.Tk):
                 command=command
             )
             btn_prescription.grid(row=0, column=i)
-
         
 
-        #===================================Details frame (bottom)===================================
+    #===================================Details frame (bottom)===================================
         #Main frame
     def mainDetails(self):
         details_frame = tk.Frame(self, bd=20, relief=tk.RIDGE, bg="linen")
@@ -272,12 +262,52 @@ class HospitalManagement(tk.Tk):
         self.hospital_table.pack(fill=tk.BOTH, expand=1)
         
         
+    #===================================Functions===================================
+        
+    def iPrescriptionData(self):
+        # Store field values in variables
+        name_tablet = self.strvars['name_tablet'].get()
+        ref = self.strvars['ref'].get()
+        dose = self.strvars['dose'].get()
+        no_of_tablet = self.strvars['no_of_tablet'].get()
+        lot = self.strvars['lot'].get()
+        issue_date = self.strvars['issue_date'].get()
+        exp_date = self.strvars['exp_date'].get()
+        daily_dose = self.strvars['daily_dose'].get()
+        storage = self.strvars['storage'].get()
+        Nhs_num = self.strvars['Nhs_num'].get()
+        patient_name = self.strvars['patient_name'].get()
+        birth_date = self.strvars['birth_date'].get()
+        patient_address = self.strvars['patient_address'].get()
 
-        
-        
-        
-        
-        
+        # Check for required fields
+        if any(value is None or value == "" for value in [name_tablet, ref, dose, no_of_tablet, lot, issue_date, exp_date, daily_dose, storage, Nhs_num, patient_name, birth_date, patient_address]):
+            messagebox.showerror("Error", "All fields are required")
+        else:
+            try:
+                conn = mysql.connector.connect(host="localhost", username="root", password="test@123", database="Mydata")
+                my_cursor = conn.cursor()
+
+                # Define the SQL query
+                query = """INSERT INTO hospital 
+                        (name_tablet, ref, dose, no_of_tablet, lot, issue_date, exp_date, daily_dose, storage, Nhs_num, patient_name, birth_date, patient_address)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
+                # Execute the query
+                my_cursor.execute(query, (
+                    name_tablet, ref, dose, no_of_tablet, lot, issue_date, exp_date, daily_dose, storage, Nhs_num, patient_name, birth_date, patient_address
+                ))
+
+                conn.commit()
+                messagebox.showinfo("Success", "Data inserted successfully!")
+            except mysql.connector.Error as e:
+                messagebox.showerror("Error", f"An error occurred: {e}")
+            finally:
+                # Close cursor and connection
+                if my_cursor:
+                    my_cursor.close()
+                if conn:
+                    conn.close()
         
         
         
